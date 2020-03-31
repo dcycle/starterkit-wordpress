@@ -1,0 +1,48 @@
+---
+version: '3'
+
+services:
+  wordpress:
+    environment:
+      # The virtual host is used when we want to access our site via an
+      # Nginx Proxy locally; and is required by the script
+      # ./scripts/https-deploy.sh.
+      # See https://blog.dcycle.com/blog/2018-10-27 for details.
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - HASH_SALT=${HASH_SALT}
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - WORDPRESS_DB_NAME=wordpress
+    ports:
+      - "80"
+    volumes:
+      - "wordpress-files:/var/www/html/sites/default/files:rw"
+    links:
+      - mysql:mysql
+    working_dir: /var/www/html
+
+  # Database server
+  mysql:
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+    volumes:
+      - "mysql:/var/lib/mysql"
+
+# Specifying the network name makes it predictable on all environments,
+# for example when running ./scripts/migrate-all.sh, or when running browser
+# tests on a CI environment, or any other tasks which requires external
+# docker containers to connect to our network.
+# This network (starterkit_wordpress_default) has been previously created in
+# ./scripts/deploy.sh
+# See https://github.com/docker/compose/issues/3736.
+networks:
+  default:
+    external:
+      name: starterkit_wordpress_default
+
+volumes:
+  mysql:
+  wordpress-files:

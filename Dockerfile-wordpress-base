@@ -1,0 +1,22 @@
+FROM wordpress
+
+# Avoid memory limits with large database imports.
+RUN echo 'memory_limit = 512M' >> /usr/local/etc/php/php.ini
+
+RUN apt-get update && \
+  apt-get --no-install-recommends -y install rsyslog && \
+  rm -rf /var/lib/apt/lists/* && \
+  echo 'local0.* /var/log/drupal.log' >> /etc/rsyslog.conf
+
+# Avoid memory limits with large database imports.
+RUN echo 'upload_max_filesize = 25M' >> /usr/local/etc/php/php.ini
+RUN echo 'post_max_size = 25M' >> /usr/local/etc/php/php.ini
+
+RUN apt-get -y update && apt-get -y install less && \
+  curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+  chmod +x wp-cli.phar && \
+  mv wp-cli.phar /usr/local/bin/wp
+
+COPY wordpress/scripts /scripts
+
+EXPOSE 80

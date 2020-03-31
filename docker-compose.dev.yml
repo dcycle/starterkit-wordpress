@@ -1,0 +1,41 @@
+---
+version: '3'
+
+services:
+  mail:
+    # Dummy email client for development, see ./README.md.
+    image: mailhog/mailhog
+    ports:
+      - "8025"
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile-wordpress-dev
+    volumes:
+      - "./wordpress/scripts:/scripts"
+      - "./wordpress/starter-data:/starter-data"
+      - "./do-not-commit/log:/var/log"
+      - "./do-not-commit/dom-captures:/var/www/html/dom-captures"
+    links:
+      - mail:mail
+
+  # Database server
+  mysql:
+    image: mysql:5
+    volumes:
+      - ./mysql/cnf:/etc/mysql/conf.d
+      - "./mysql/scripts:/scripts"
+      - "./mysql/starter-data:/starter-data"
+
+# Specifying the network name makes it predictable on all environments,
+# for example when running ./scripts/migrate-all.sh, or when running browser
+# tests on a CI environment, or any other tasks which requires external
+# docker containers to connect to our network.
+# This network (starterkit_wordpress_default) has been previously created in
+# ./scripts/deploy.sh
+# See https://github.com/docker/compose/issues/3736.
+networks:
+  default:
+    external:
+      name: starterkit_wordpress_default
