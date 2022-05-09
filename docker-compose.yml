@@ -10,6 +10,9 @@ services:
       - "wordpress-files:/var/www/html/sites/default/files:rw"
 
   wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile-wordpress-base
     environment:
       # The virtual host is used when we want to access our site via an
       # Nginx Proxy locally; and is required by the script

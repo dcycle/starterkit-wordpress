@@ -5,7 +5,7 @@
 
 set -e
 
-docker exec "$(./scripts/docker-compose-container.sh drupal)" /bin/bash -c \
+docker exec "$(docker-compose ps -q drupal)" /bin/bash -c \
   "drush cex -y deploy"
 
 # We consider certain items to be data whereas Drupal considers them to

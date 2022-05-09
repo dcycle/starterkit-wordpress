@@ -22,7 +22,7 @@ echo 'https://hub.docker.com/r/dcycle/drupal/ from the Docker hub. This image'
 echo 'is updated automatically every Wednesday with the latest version of'
 echo 'Drupal and Drush. If the image has changed since the latest deployment,'
 echo 'the environment will be completely rebuilt based on this image.'
-docker pull wordpress
+docker pull wordpress:fpm-alpine
 docker pull mariadb
 
 docker build -f="Dockerfile-wordpress-base" -t local-starterkit-wordpress-base .
@@ -57,15 +57,9 @@ docker-compose $DOCKER_COMPOSE_FILES up -d --build
 
 echo ''
 echo '-----'
-echo 'Remembering docker-compose info to run faster later on.'
-# If you use docker-compose restart, rerun the following script.
-./scripts/docker-compose-remember-info.sh
-
-echo ''
-echo '-----'
 echo 'Running the deploy script on the running containers. This installs'
 echo 'Wordpress if it is not yet installed.'
-docker exec "$(./scripts/docker-compose-container.sh mysql)" /scripts/deploy.sh
+docker exec "$(docker-compose ps -q mysql)" /scripts/deploy.sh
 
 # If you need to do stuff after deployment such as set a state variable, do it
 # here.
@@ -73,7 +67,7 @@ docker exec "$(./scripts/docker-compose-container.sh mysql)" /scripts/deploy.sh
 echo ''
 echo '-----'
 echo 'Running the update script on the container.'
-docker exec "$(./scripts/docker-compose-container.sh wordpress)" /scripts/update.sh $(./scripts/docker-compose-port.sh wordpress 80)
+docker exec "$(docker-compose ps -q wordpress)" /scripts/update.sh $(docker-compose port wordpress 80)
 echo ''
 echo '-----'
 echo ''

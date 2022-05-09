@@ -4,4 +4,4 @@
 #
 set -e
 
-echo " => Dummy email client: http://$(./scripts/docker-compose-port.sh mail 8025)"
+echo " => Dummy email client: http://$(docker-compose port mail 8025)"

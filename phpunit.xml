@@ -2,7 +2,7 @@
 <phpunit bootstrap="phpunit-autoload.php">
   <testsuites>
     <testsuite name="myproject">
-      <directory>./drupal/custom-modules/my_custom_module/test</directory>
+      <directory>./wordpress/test</directory>
     </testsuite>
   </testsuites>
 </phpunit>

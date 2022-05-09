@@ -10,3 +10,7 @@ echo "Test initial deployment"
 ./scripts/deploy.sh
 echo "Test incremental deployment"
 ./scripts/deploy.sh
+
+echo ""
+echo "All done, Jack!"
+echo ""
