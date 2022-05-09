@@ -22,7 +22,7 @@ services:
 
   # Database server
   mysql:
-    image: mysql:5
+    image: mariadb
     volumes:
       - ./mysql/cnf:/etc/mysql/conf.d
       - "./mysql/scripts:/scripts"

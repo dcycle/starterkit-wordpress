@@ -21,7 +21,7 @@ do
   OUTPUT=$(echo 'show databases'|{ mysql -h mysql -u root --password="$WORDPRESS_DB_PASSWORD" 2>&1 || true; })
   if [[ "$OUTPUT" == *"ERROR"* ]]; then
     echo "MySQL container is not available yet. Should not be long..."
-    sleep 2
+    sleep 1
   else
     echo "MySQL is up! Moving on..."
   fi
@@ -41,5 +41,3 @@ fi
 # mkdir -p /var/www/html/sites/default/files
 # chown -R www-data:www-data /var/www/html/sites/default/files
 # cp /scripts/public-htaccess-file.txt /var/www/html/sites/default/files/.htaccess
-
-service rsyslog start

@@ -1,5 +1,5 @@
-FROM local-starterkit-wordpress-base
+FROM wordpress:fpm-alpine
 
-# Make sure opcache is disabled during development so that our changes
-# to PHP are reflected immediately.
-RUN echo 'opcache.enable=0' >> /usr/local/etc/php/php.ini
+COPY wordpress/scripts /scripts
+
+RUN /scripts/build-dev.sh
